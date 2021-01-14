@@ -9,15 +9,22 @@ const date = document.querySelector('#date')
 // IIEF
 ( () => {
 
-    // loop through all local storage key
-    for (let i = 0; i < localStorage.length; i++) {
+    for (let key in localStorage) {
+
+         const stored = localStorage.getItem(key);
         
-        const stored = localStorage.getItem(i);
+         const text = `<li>
+                         <input id="complete" type="checkbox">
+                         <p id="item">${stored}</p>
+                         <i id="trash" class="far fa-trash-alt"></i>
+                     </li>`
 
-        // insert stored value 
-        list.insertAdjacentHTML('beforeend', stored);
+         // insert stored value 
+         if (stored) {
+             list.insertAdjacentHTML('beforeend', text);
+         }
+
     }
-
 })();
 
 // add to-do function
@@ -37,7 +44,7 @@ const addToDo = (toDo) => {
         list.insertAdjacentHTML('beforeend', text);
 
         // stores to local storage
-        storeToDo(text);
+        storeToDo(toDo);
 
         // reset input text box
         input.value = '';
@@ -123,10 +130,25 @@ list.addEventListener('click', (e) => {
     // check event target is equal to trash
     if (id === 'trash') {
         
-        // remove item
+        // assign current text
+        const current = e.target.parentNode.children[1].innerHTML;
+        
+        // loop over local storage keys
+        for (let key in localStorage) {
+            
+            // assign key value to stored
+            const stored = localStorage.getItem(key);
+
+            // check if current value is equal to key value
+            if(current === stored) {
+
+                // remove key value in local storage
+                localStorage.removeItem(key);
+            }
+        }
         item.remove();
     }
-    // add edit function when list id=item is clicked
+    // TODO: add edit function when list id=item is clicked
     
 })
 
